@@ -1,0 +1,36 @@
+{
+  "name": "jquery.input",
+  "version": "0.0.0",
+  "description": "A Common interface for html input elements.",
+  "main": "jquery.input.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DubFriend/jquery.input"
+  },
+  "keywords": [
+    "input",
+    "form",
+    "interface",
+    "textarea",
+    "radio",
+    "text",
+    "checkbox",
+    "select",
+    "file",
+    "hidden",
+    "password"
+  ],
+  "author": "Brian Detering <BDeterin@gmail.com> (http://www.briandetering.net/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DubFriend/jquery.input/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-preprocess": "~4.0.0"
+  }
+}

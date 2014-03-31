@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="qunit-1.14.0.css">
+</head>
+<body>
+    <script id="input" type="text/template">
+        <div>
+            text
+            <input type="text" name="text"/>
+        </div>
+        
+        <div>
+            password
+            <input type="password" name="text"/>
+        </div>
+        
+        <div>
+            email
+            <input type="email" name="text"/>
+        </div>
+        
+        <div>
+            url
+            <input type="url" name="text"/>
+        </div>
+        
+        <div>
+            <input type="range" min="0" max="10"/>
+        </div>
+        
+        
+        <div>
+            <textarea name="textarea"></textarea>
+        </div>
+        
+        <div>
+            <input type="radio" name="radio" value="a"/>a
+            <input type="radio" name="radio" value="b"/>b
+        </div>
+        
+        <div>
+            <input type="checkbox" name="checkbox" value="a"/>a
+            <input type="checkbox" name="checkbox" value="b"/>b
+        </div>
+        
+        <div>
+            <input type="checkbox" name="checkbox2" value="a"/>a
+        </div>
+        
+        <div>
+            <select name="select">
+                <option value="a">a</option>
+                <option value="b">b</option>
+            </select>
+        
+            <select name="select2">
+                <option value="a">a</option>
+                <option value="b">b</option>
+            </select>
+        </div>
+        
+        <div>
+            <input type="file" name="file"/>
+        </div>
+        
+    </script>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="../jquery-1.11.0.js"></script>
+    <script src="qunit-1.14.0.js"></script>
+    <script src="../jquery.input.js"></script>
+    <script src="jquery.input.js"></script>
+</body>
+</html>
