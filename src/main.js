@@ -26,3 +26,11 @@ $.fn.inputChange = function (callback) {
 
     // return $self.change(callback);
 };
+
+$.fn.inputDisable = function () {
+
+};
+
+$.fn.inputEnable = function () {
+
+};
