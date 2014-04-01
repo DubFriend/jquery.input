@@ -11,7 +11,11 @@ var createInputFile = function (fig) {
     };
 
     self.clear = function () {
-        $.fileAjax.clearFileInputs(self.$().parent());
+        // http://stackoverflow.com/questions/1043957/clearing-input-type-file-using-jquery
+        this.$().each(function () {
+            $(this).wrap('<form>').closest('form').get(0).reset();
+            $(this).unwrap();
+        });
     };
 
     self.$().change(function () {

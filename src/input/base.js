@@ -32,11 +32,13 @@ var createInput = function (fig, my) {
     };
 
     self.set = function (newValue) {
-        var oldValue = self.get();
-        if(oldValue !== newValue) {
-            self.$().val(newValue);
-            self.publish('change', self);
-        }
+
+        self.$().val(newValue);
+        // var oldValue = self.get();
+        // if(oldValue !== newValue) {
+        //     self.$().val(newValue);
+        //     self.publish('change', self);
+        // }
     };
 
     self.clear = function () {

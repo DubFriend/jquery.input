@@ -29,7 +29,7 @@ var buildFormInputs = function ($self) {
         var names = [],
             $input = isObject(selector) ? selector : $self.find(selector);
 
-        // gropu by name attribute
+        // group by name attribute
         $input.each(function () {
             if(indexOf(names, $(this).attr('name')) === -1) {
                 names.push($(this).attr('name'));

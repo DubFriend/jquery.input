@@ -440,11 +440,13 @@ var createInput = function (fig, my) {
     };
 
     self.set = function (newValue) {
-        var oldValue = self.get();
-        if(oldValue !== newValue) {
-            self.$().val(newValue);
-            self.publish('change', self);
-        }
+
+        self.$().val(newValue);
+        // var oldValue = self.get();
+        // if(oldValue !== newValue) {
+        //     self.$().val(newValue);
+        //     self.publish('change', self);
+        // }
     };
 
     self.clear = function () {
@@ -519,6 +521,20 @@ var createInputCheckbox = function (fig) {
     return self;
 };
 
+var createInputEmail = function (fig) {
+    var my = {},
+        self = createInput(fig, my);
+
+    self.getType = function () {
+        return 'email';
+    };
+
+    self.$().keyup(debounce(200, function (e) {
+        self.publish('change', self);
+    }));
+
+    return self;
+};
 
 var createInputFile = function (fig) {
     var my = {},
@@ -533,7 +549,11 @@ var createInputFile = function (fig) {
     };
 
     self.clear = function () {
-        $.fileAjax.clearFileInputs(self.$().parent());
+        // http://stackoverflow.com/questions/1043957/clearing-input-type-file-using-jquery
+        this.$().each(function () {
+            $(this).wrap('<form>').closest('form').get(0).reset();
+            $(this).unwrap();
+        });
     };
 
     self.$().change(function () {
@@ -595,7 +615,7 @@ var createInputRange = function (fig) {
         return 'range';
     };
 
-     self.$().change(function (e) {
+    self.$().change(function (e) {
         self.publish('change', self);
     });
 
@@ -617,8 +637,6 @@ var createInputSelect = function (fig) {
     return self;
 };
 
-// createInputText is also used for password, email, and url input types.
-// (see buildFormInputs.js)
 var createInputText = function (fig) {
     var my = {},
         self = createInput(fig, my);
@@ -649,6 +667,20 @@ var createInputTextarea = function (fig) {
     return self;
 };
 
+var createInputURL = function (fig) {
+    var my = {},
+        self = createInput(fig, my);
+
+    self.getType = function () {
+        return 'url';
+    };
+
+    self.$().keyup(debounce(200, function (e) {
+        self.publish('change', self);
+    }));
+
+    return self;
+};
 
 var buildFormInputs = function ($self) {
     var inputs = {};
@@ -681,7 +713,7 @@ var buildFormInputs = function ($self) {
         var names = [],
             $input = isObject(selector) ? selector : $self.find(selector);
 
-        // gropu by name attribute
+        // group by name attribute
         $input.each(function () {
             if(indexOf(names, $(this).attr('name')) === -1) {
                 names.push($(this).attr('name'));
