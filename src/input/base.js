@@ -32,13 +32,7 @@ var createInput = function (fig, my) {
     };
 
     self.set = function (newValue) {
-
         self.$().val(newValue);
-        // var oldValue = self.get();
-        // if(oldValue !== newValue) {
-        //     self.$().val(newValue);
-        //     self.publish('change', self);
-        // }
     };
 
     self.clear = function () {
@@ -47,13 +41,23 @@ var createInput = function (fig, my) {
 
     my.buildSetter = function (callback) {
         return function (newValue) {
-            var oldValue = self.get();
-            if(oldValue !== newValue) {
-                callback.call(self, newValue);
-                self.publish('change', self);
-            }
+            callback.call(self, newValue);
         };
     };
+
+    my.equalTo = function (a, b) {
+        return a === b;
+    };
+
+    my.publishChange = (function () {
+        var oldValue;
+        return function (e) {
+            var newValue = self.get();
+            if(!my.equalTo(newValue, oldValue)) {
+                self.publish('change', e);
+            }
+        };
+    }());
 
     return self;
 };

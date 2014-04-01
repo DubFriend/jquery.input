@@ -6,9 +6,7 @@ var createInputSelect = function (fig) {
         return 'select';
     };
 
-    self.$().change(function () {
-        self.publish('change', self);
-    });
+    self.$().change(my.publishChange);
 
     return self;
 };

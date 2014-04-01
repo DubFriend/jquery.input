@@ -17,38 +17,32 @@ var createInputCheckbox = function (fig) {
     };
 
     self.set = function (newValues) {
-
         newValues = isArray(newValues) ? newValues : [newValues];
 
-        var oldValues = self.get(),
-            isDifferent = false;
+        self.$().each(function () {
+            $(this).prop('checked', false);
+        });
 
-        if(oldValues.length === newValues.length) {
-            foreach(oldValues, function (value) {
-                if(indexOf(newValues, value) === -1) {
-                    isDifferent = true;
-                }
-            });
-        }
-        else {
-            isDifferent = true;
-        }
-
-        if(isDifferent) {
-            self.$().each(function () {
-                $(this).prop('checked', false);
-            });
-            foreach(newValues, function (value) {
-                self.$().filter('[value="' + value + '"]')
-                    .prop('checked', true);
-            });
-            self.publish('change', newValues);
-        }
+        foreach(newValues, function (value) {
+            self.$().filter('[value="' + value + '"]')
+                .prop('checked', true);
+        });
     };
 
-    self.$().click(function () {
-        self.publish('change', self);
-    });
+    my.equalTo = function (a, b) {
+        a = isArray(a) ? a : [a];
+        b = isArray(b) ? b : [b];
+
+        var isEqual = true;
+        foreach(a, function (value) {
+            if(!inArray(b, value)) {
+                isEqual = false;
+            }
+        });
+        return isEqual;
+    };
+
+    self.$().click(my.publishChange);
 
     return self;
 };

@@ -19,9 +19,7 @@ var createInputRadio = function (fig) {
         }
     });
 
-    self.$().change(function () {
-        self.publish('change', self);
-    });
+    self.$().change(my.publishChange);
 
     return self;
 };

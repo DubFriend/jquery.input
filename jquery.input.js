@@ -440,13 +440,7 @@ var createInput = function (fig, my) {
     };
 
     self.set = function (newValue) {
-
         self.$().val(newValue);
-        // var oldValue = self.get();
-        // if(oldValue !== newValue) {
-        //     self.$().val(newValue);
-        //     self.publish('change', self);
-        // }
     };
 
     self.clear = function () {
@@ -455,13 +449,23 @@ var createInput = function (fig, my) {
 
     my.buildSetter = function (callback) {
         return function (newValue) {
-            var oldValue = self.get();
-            if(oldValue !== newValue) {
-                callback.call(self, newValue);
-                self.publish('change', self);
-            }
+            callback.call(self, newValue);
         };
     };
+
+    my.equalTo = function (a, b) {
+        return a === b;
+    };
+
+    my.publishChange = (function () {
+        var oldValue;
+        return function (e) {
+            var newValue = self.get();
+            if(!my.equalTo(newValue, oldValue)) {
+                self.publish('change', e);
+            }
+        };
+    }());
 
     return self;
 };
@@ -485,53 +489,43 @@ var createInputCheckbox = function (fig) {
     };
 
     self.set = function (newValues) {
-
         newValues = isArray(newValues) ? newValues : [newValues];
 
-        var oldValues = self.get(),
-            isDifferent = false;
+        self.$().each(function () {
+            $(this).prop('checked', false);
+        });
 
-        if(oldValues.length === newValues.length) {
-            foreach(oldValues, function (value) {
-                if(indexOf(newValues, value) === -1) {
-                    isDifferent = true;
-                }
-            });
-        }
-        else {
-            isDifferent = true;
-        }
-
-        if(isDifferent) {
-            self.$().each(function () {
-                $(this).prop('checked', false);
-            });
-            foreach(newValues, function (value) {
-                self.$().filter('[value="' + value + '"]')
-                    .prop('checked', true);
-            });
-            self.publish('change', newValues);
-        }
+        foreach(newValues, function (value) {
+            self.$().filter('[value="' + value + '"]')
+                .prop('checked', true);
+        });
     };
 
-    self.$().click(function () {
-        self.publish('change', self);
-    });
+    my.equalTo = function (a, b) {
+        a = isArray(a) ? a : [a];
+        b = isArray(b) ? b : [b];
+
+        var isEqual = true;
+        foreach(a, function (value) {
+            if(!inArray(b, value)) {
+                isEqual = false;
+            }
+        });
+        return isEqual;
+    };
+
+    self.$().click(my.publishChange);
 
     return self;
 };
 
 var createInputEmail = function (fig) {
     var my = {},
-        self = createInput(fig, my);
+        self = createInputText(fig, my);
 
     self.getType = function () {
         return 'email';
     };
-
-    self.$().keyup(debounce(200, function (e) {
-        self.publish('change', self);
-    }));
 
     return self;
 };
@@ -571,9 +565,7 @@ var createInputHidden = function (fig) {
         return 'hidden';
     };
 
-    self.$().keyup(function (e) {
-        self.publish('change', self);
-    });
+    self.$().change(my.publishChange);
 
     return self;
 };
@@ -600,9 +592,7 @@ var createInputRadio = function (fig) {
         }
     });
 
-    self.$().change(function () {
-        self.publish('change', self);
-    });
+    self.$().change(my.publishChange);
 
     return self;
 };
@@ -615,9 +605,7 @@ var createInputRange = function (fig) {
         return 'range';
     };
 
-    self.$().change(function (e) {
-        self.publish('change', self);
-    });
+    self.$().change(my.publishChange);
 
     return self;
 };
@@ -630,9 +618,7 @@ var createInputSelect = function (fig) {
         return 'select';
     };
 
-    self.$().change(function () {
-        self.publish('change', self);
-    });
+    self.$().change(my.publishChange);
 
     return self;
 };
@@ -645,9 +631,7 @@ var createInputText = function (fig) {
         return 'text';
     };
 
-    self.$().keyup(debounce(200, function (e) {
-        self.publish('change', self);
-    }));
+    self.$().change(my.publishChange);
 
     return self;
 };
@@ -660,24 +644,18 @@ var createInputTextarea = function (fig) {
         return 'textarea';
     };
 
-    self.$().keyup(debounce(200, function () {
-        self.publish('change', self);
-    }));
+    self.$().change(my.publishChange);
 
     return self;
 };
 
 var createInputURL = function (fig) {
     var my = {},
-        self = createInput(fig, my);
+        self = createInputText(fig, my);
 
     self.getType = function () {
         return 'url';
     };
-
-    self.$().keyup(debounce(200, function (e) {
-        self.publish('change', self);
-    }));
 
     return self;
 };

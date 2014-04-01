@@ -13,7 +13,6 @@ var buildSetup = function (fig) {
 var testGet = function() {
     var value = this.testValue || 'b';
     this.$.val(value);
-    // deepEqual(this.$.inputVal(), value, 'gets current value');
     deepEqual(this.input.get(), value, 'gets current value');
 };
 
@@ -72,18 +71,29 @@ var testEnabled = function () {
     deepEqual(this.$.prop('disabled'), false, 'disabled property not set');
 };
 
-var testPublishesChangeOnKeyup = function () {
-    expect(1);
-    var value = this.testValue || 'a';
-    this.input.set(value);
-    this.input.subscribe('change', function (input) {
-        deepEqual(input.get(), value, 'published');
-        start();
-    });
-    // http://stackoverflow.com/questions/832059/definitive-way-to-trigger-keypress-events-with-jquery
-    var keyUpEvent = $.Event('keyup');
-    this.$.trigger(keyUpEvent);
+var testPublishesOnEvents = function () {
+    var events = argumentsToArray(arguments);
+    return function () {
+        var self = this;
+        expect(events.length);
+        var value = self.testValue || 'a';
+        self.input.set(value);
+
+        foreach(events, function (ev) {
+            self.input.subscribe('change', function (e) {
+                ok(e.preventDefault, 'passed event object');
+
+            });
+        });
+
+        foreach(events, function (ev) {
+            self.$.trigger($.Event(ev));
+        });
+    };
 };
+
+
+
 
 module("createInputText", {
     setup: buildSetup({
@@ -95,12 +105,13 @@ module("createInputText", {
 test("textInput get", testGet);
 test("textInput set", testSet);
 test("textInput clear", testClear);
-// test("textInput set publishes change if changed", testPublishesOnSetChange);
-// test("textInput set no publish if data not different", testNotPublishesOnSetNotChange);
 test("textInput getType", testGetType('text'));
 test("textInput disable", testDisabled);
 test("textInput enable", testEnabled);
-asyncTest("textInput set publishes change on keyup", testPublishesChangeOnKeyup);
+test(
+    "textInput set publishes change on keyup, keydown",
+    testPublishesOnEvents('keyup', 'keydown', 'change')
+);
 
 
 module("createInputPassword", {
@@ -113,12 +124,13 @@ module("createInputPassword", {
 test("passwordInput get", testGet);
 test("passwordInput set", testSet);
 test("passwordInput clear", testClear);
-// test("passwordInput set publishes change if changed", testPublishesOnSetChange);
-// test("passwordInput set no publish if data not different", testNotPublishesOnSetNotChange);
 test("passwordInput getType", testGetType('password'));
 test("passwordInput disable", testDisabled);
 test("passwordInput enable", testEnabled);
-asyncTest("passwordInput set publishes change on keyup", testPublishesChangeOnKeyup);
+test(
+    "passwordInput set publishes change on keyup, keydown, change",
+    testPublishesOnEvents('keyup', 'keydown', 'change')
+);
 
 module("createInputEmail", {
     setup: buildSetup({
@@ -130,12 +142,13 @@ module("createInputEmail", {
 test("emailInput get", testGet);
 test("emailInput set", testSet);
 test("emailInput clear", testClear);
-// test("emailInput set publishes change if changed", testPublishesOnSetChange);
-// test("emailInput set no publish if data not different", testNotPublishesOnSetNotChange);
 test("emailInput getType", testGetType('email'));
 test("emailInput disable", testDisabled);
 test("emailInput enable", testEnabled);
-asyncTest("emailInput set publishes change on keyup", testPublishesChangeOnKeyup);
+test(
+    "emailInput set publishes change on keyup, keydown, change",
+    testPublishesOnEvents('keyup', 'keydown', 'change')
+);
 
 module("createInputURL", {
     setup: buildSetup({
@@ -147,12 +160,13 @@ module("createInputURL", {
 test("urlInput get", testGet);
 test("urlInput set", testSet);
 test("urlInput clear", testClear);
-// test("urlInput set publishes change if changed", testPublishesOnSetChange);
-// test("urlInput set no publish if data not different", testNotPublishesOnSetNotChange);
 test("urlInput getType", testGetType('url'));
 test("urlInput disable", testDisabled);
 test("urlInput enable", testEnabled);
-asyncTest("urlInput set publishes change on keyup", testPublishesChangeOnKeyup);
+test(
+    "urlInput set publishes change on keyup, keydown, change",
+    testPublishesOnEvents('keyup', 'keydown', 'change')
+);
 
 module("createInputRange", {
     setup: buildSetup({
@@ -164,20 +178,13 @@ module("createInputRange", {
 
 test("rangeInput get", testGet);
 test("rangeInput set", testSet);
-// test("rangeInput set publishes change if changed", testPublishesOnSetChange);
-// test("rangeInput set no publish if data not different", testNotPublishesOnSetNotChange);
 test("rangeInput getType", testGetType('range'));
 test("rangeInput disable", testDisabled);
 test("rangeInput enable", testEnabled);
-test("rangeInput set publishes change on change", function () {
-    expect(1);
-    this.input.set('1');
-    this.input.subscribe('change', function (input) {
-        deepEqual(input.get(), '1', 'published');
-    });
-    this.$.change();
-});
-
+test(
+    "rangeInput set publishes change on change",
+    testPublishesOnEvents('change')
+);
 
 module("createInputTextarea", {
     setup: buildSetup({
@@ -186,24 +193,16 @@ module("createInputTextarea", {
     })
 });
 
-test("textareaInput get", function() {
-    this.$.html('b');
-    deepEqual(this.input.get(), 'b', 'gets current value');
-});
-
-test("textareaInput set", function() {
-    this.input.set('b');
-    deepEqual(this.$.val(), 'b', 'textarea input value is set');
-});
-
+test("textareaInput get", testGet);
+test("textareaInput set", testSet);
 test("textareaInput clear", testClear);
-// test("textareaInput set publishes change if changed", testPublishesOnSetChange);
-// test("textareaInput set no publish if data not different", testNotPublishesOnSetNotChange);
-asyncTest("textareaInput set publishes change on keyup", testPublishesChangeOnKeyup);
+test(
+    "textareaInput set publishes change on keyup, keydown, change",
+    testPublishesOnEvents('change', 'keyup', 'keydown')
+);
 test("textareaInput getType", testGetType('textarea'));
 test("textareaInput disable", testDisabled);
 test("textareaInput enable", testEnabled);
-
 
 module("createInputSelect", {
     setup: buildSetup({
@@ -218,19 +217,10 @@ test("selectInput clear", function () {
     this.input.clear();
     strictEqual(this.input.get(), null, 'input cleared');
 });
-
-// test("selectInput set publishes change if changed", testPublishesOnSetChange);
-// test("selectInput set no publish if data not different", testNotPublishesOnSetNotChange);
-
-test("selectInput set publishes change on change", function () {
-    expect(1);
-    this.input.set('b');
-    this.input.subscribe('change', function (input) {
-        deepEqual(input.get(), 'b', 'published');
-    });
-    this.$.change();
-});
-
+test(
+    "selectInput set publishes change on change",
+    testPublishesOnEvents('change')
+);
 test("selectInput getType", testGetType('select'));
 test("selectInput disable", testDisabled);
 test("selectInput enable", testEnabled);
@@ -250,13 +240,19 @@ test("radioInput get", function() {
 
 test("radioInput set", function() {
     this.input.set('b');
-    strictEqual(this.$.filter(':checked').val(), 'b', 'radio input value is set');
+    strictEqual(
+        this.$.filter(':checked').val(), 'b',
+        'radio input value is set'
+    );
 });
 
 test("radioInput set to empty string", function () {
     this.input.set('b');
     this.input.set('');
-    strictEqual(this.$.filter(':checked').length, 0, 'radio input value is cleared');
+    strictEqual(
+        this.$.filter(':checked').length, 0,
+        'radio input value is cleared'
+    );
 });
 
 test("radioInput clear", function () {
@@ -264,19 +260,14 @@ test("radioInput clear", function () {
     deepEqual(this.input.get(), null, 'input cleared');
 });
 
-test("radioInput set publishes change if changed", testPublishesOnSetChange);
-test("radioInput set no publish if data not different", testNotPublishesOnSetNotChange);
-
 test("radioInput set publishes change on change", function () {
     expect(1);
     this.input.set('b');
-    this.input.subscribe('change', function (input) {
-        deepEqual(input.get(), 'b', 'published');
+    this.input.subscribe('change', function (e) {
+        ok(e.preventDefault, 'passed event object');
     });
     this.$.filter('[value="a"]').change();
 });
-
-
 
 test("radioInput getType", testGetType('radio'));
 test("radioInput disable", testDisabled);
@@ -322,29 +313,15 @@ test("checkboxInput set multiple", function() {
     deepEqual(this.input.get(), ['a','b'], 'text input value is set');
 });
 
-test("checkboxInput set publishes change if changed", function() {
-    expect(1);
-    this.input.subscribe('change', function (data) {
-        deepEqual(data, ['b'], 'publishes changed data');
-    });
-    this.input.set(['b']);
-});
-
 test("checkboxInput set wraps with array if set value not an array", function() {
-    expect(2);
-    this.input.subscribe('change', function (data) {
-        deepEqual(data, ['b'], 'published data is wrapped');
-    });
     this.input.set('b');
     deepEqual(this.input.get(), ['b'], 'get data is wrapped');
 });
 
-test("checkboxInput set no publish if data not different", testNotPublishesOnSetNotChange);
-
 test("checkboxInput set publishes change on click", function () {
     expect(1);
-    this.input.subscribe('change', function (input) {
-        deepEqual(input.get(), ['a'], 'published');
+    this.input.subscribe('change', function (e) {
+        ok(e.preventDefault, 'passed event object');
     });
     this.$.filter('[value="a"]').click();
 });
@@ -368,6 +345,7 @@ test("fileInput enable", testEnabled);
 test("fileInput getFileName, file not set", function () {
     strictEqual(this.input.get(), '');
 });
+
 test("fileInput publishes filename when file changed", function () {
     expect(1);
     this.input.subscribe('change', function (input) {
