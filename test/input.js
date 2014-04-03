@@ -94,7 +94,6 @@ var testPublishesOnEvents = function () {
 
 
 
-
 module("createInputText", {
     setup: buildSetup({
         selector: 'input[name="text"]',
@@ -112,6 +111,7 @@ test(
     "textInput set publishes change on keyup, keydown",
     testPublishesOnEvents('keyup', 'keydown', 'change')
 );
+
 
 
 module("createInputPassword", {
@@ -132,6 +132,8 @@ test(
     testPublishesOnEvents('keyup', 'keydown', 'change')
 );
 
+
+
 module("createInputEmail", {
     setup: buildSetup({
         selector: 'input[name="email"]',
@@ -149,6 +151,8 @@ test(
     "emailInput set publishes change on keyup, keydown, change",
     testPublishesOnEvents('keyup', 'keydown', 'change')
 );
+
+
 
 module("createInputURL", {
     setup: buildSetup({
@@ -168,6 +172,8 @@ test(
     testPublishesOnEvents('keyup', 'keydown', 'change')
 );
 
+
+
 module("createInputRange", {
     setup: buildSetup({
         selector: 'input[name="range"]',
@@ -186,6 +192,8 @@ test(
     testPublishesOnEvents('change')
 );
 
+
+
 module("createInputTextarea", {
     setup: buildSetup({
         selector: '[name="textarea"]',
@@ -203,6 +211,8 @@ test(
 test("textareaInput getType", testGetType('textarea'));
 test("textareaInput disable", testDisabled);
 test("textareaInput enable", testEnabled);
+
+
 
 module("createInputSelect", {
     setup: buildSetup({
@@ -224,6 +234,7 @@ test(
 test("selectInput getType", testGetType('select'));
 test("selectInput disable", testDisabled);
 test("selectInput enable", testEnabled);
+
 
 
 module("createInputRadio", {
@@ -272,6 +283,7 @@ test("radioInput set publishes change on change", function () {
 test("radioInput getType", testGetType('radio'));
 test("radioInput disable", testDisabled);
 test("radioInput enable", testEnabled);
+
 
 
 module("createInputCheckbox", {
@@ -326,9 +338,48 @@ test("checkboxInput set publishes change on click", function () {
     this.$.filter('[value="a"]').click();
 });
 
+test("checkboxInput set publishes change on change", function () {
+    expect(1);
+    this.input.subscribe('change', function (e) {
+        ok(e.preventDefault, 'passed event object');
+    });
+    this.$.filter('[value="a"]').prop('checked', true);
+    this.$.filter('[value="a"]').change();
+});
+
 test("checkboxInput getType", testGetType('checkbox'));
 test("checkboxInput disable", testDisabled);
 test("checkboxInput enable", testEnabled);
+
+
+
+module("createInputMultipleFile", {
+    setup: buildSetup({
+        selector: '[name="multipleFile"]',
+        createInput: createInputMultipleFile
+    })
+});
+
+test("multipleFileInput clear", function () {
+    this.input.clear();
+    deepEqual(this.input.get(), [], 'input cleared');
+});
+
+test("multipleFileInput getType", testGetType('file[multiple]'));
+test("multipleFileInput disable", testDisabled);
+test("multipleFileInput enable", testEnabled);
+test("multipleFileInput getFileName, file not set", function () {
+    deepEqual(this.input.get(), []);
+});
+
+test("multipleFileInput publishes filename when file changed", function () {
+    expect(1);
+    this.input.subscribe('change', function (input) {
+        deepEqual(input.get(), [], 'publishes');
+    });
+    this.$.change();
+});
+
 
 
 module("createInputFile", {

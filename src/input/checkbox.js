@@ -42,7 +42,7 @@ var createInputCheckbox = function (fig) {
         return isEqual;
     };
 
-    self.$().click(my.publishChange);
+    self.$().change(my.publishChange);
 
     return self;
 };
