@@ -1,62 +1,100 @@
-// var createMockFactory = function () {
-//     return {
-//         input: {
-//             text: identity,
-//             textarea: identity,
-//             select: identity,
-//             radio: identity,
-//             checkbox: identity,
-//             file: identity,
-//             button: identity,
-//             hidden: identity,
-//             range: identity
-//         }
-//     };
-// };
 
-// var $fixture = $('#qunit-fixture');
+var $fixture = $('#qunit-fixture');
 
-// module('buildFormInputs',{
-//     setup: function () {
-//         $fixture.html($('#forminator').html());
-//         this.inputs = buildFormInputs({
-//             $: $('.frm-name'),
-//             factory: createMockFactory()
-//         });
-//     }
-// });
+var builderBuildFormInputs = function (selector) {
+    return buildFormInputs({
+        $: selector ?
+            $fixture.find('.js-container').find(selector) :
+            $fixture.find('.js-container'),
+        constructorOverride: {
+            text: identity,
+            url: identity,
+            email: identity,
+            password: identity,
+            range: identity,
+            textarea: identity,
+            select: identity,
+            'select[multiple]': identity,
+            radio: identity,
+            checkbox: identity,
+            file: identity,
+            'file[multiple]': identity,
+            hidden: identity
+        }
+    });
+};
 
-// var buildTest = function (name, length) {
-//     test(name + ' length', function () {
-//         deepEqual(this.inputs[name].$.length, length, length + ' html element(s)');
-//     });
+var buildSetup = function (selector) {
+    return {
+        setup: function () {
+            $fixture.html($('#input').html());
+            this.inputs = builderBuildFormInputs(selector);
+        }
+    };
+};
 
-//     test(name + ' name(s)', function () {
-//         this.inputs[name].$.each(function () {
-//             deepEqual($(this).attr('name'), name, 'name is ' + name);
-//         });
-//     });
+module('buildFormInputs', buildSetup());
 
-// };
+var buildTest = function (name, length) {
+    test(name + ' length', function () {
+        deepEqual(this.inputs[name].$.length, length, length + ' html element(s)');
+    });
+
+    test(name + ' name(s)', function () {
+        this.inputs[name].$.each(function () {
+            deepEqual($(this).attr('name'), name, 'name is ' + name);
+        });
+    });
+};
 
 
-// buildTest('text', 1);
-// buildTest('text2', 1);
-// buildTest('password', 1);
-// buildTest('email', 1);
-// buildTest('url', 1);
-// buildTest('range', 1);
+buildTest('text', 1);
+buildTest('password', 1);
+buildTest('email', 1);
+buildTest('url', 1);
+buildTest('range', 1);
+buildTest('textarea', 1);
+buildTest('radio', 2);
+buildTest('checkbox', 2);
+buildTest('checkbox2', 1);
+buildTest('select', 1);
+buildTest('select2', 1);
+buildTest('multipleSelect', 1);
+buildTest('file', 1);
+buildTest('multipleFile', 1);
 
-// buildTest('textarea', 1);
-// buildTest('textarea2', 1);
-// buildTest('radio', 2);
-// buildTest('radio2', 2);
-// buildTest('checkbox[]', 2);
-// buildTest('checkbox2[]', 2);
-// buildTest('select', 1);
-// buildTest('select2', 1);
-// buildTest('file', 1);
-// buildTest('file2', 1);
-// buildTest('submit', 1);
-// buildTest('button', 1);
-// buildTest('hidden', 1);
+module('buildFormInputs text', buildSetup('[name="text"]'));
+buildTest('text', 1);
+
+module('buildFormInputs password', buildSetup('[name="password"]'));
+buildTest('password', 1);
+
+module('buildFormInputs email', buildSetup('[name="email"]'));
+buildTest('email', 1);
+
+module('buildFormInputs url', buildSetup('[name="url"]'));
+buildTest('url', 1);
+
+module('buildFormInputs range', buildSetup('[name="range"]'));
+buildTest('range', 1);
+
+module('buildFormInputs textarea', buildSetup('[name="textarea"]'));
+buildTest('textarea', 1);
+
+module('buildFormInputs radio', buildSetup('[name="radio"]'));
+buildTest('radio', 2);
+
+module('buildFormInputs checkbox', buildSetup('[name="checkbox"]'));
+buildTest('checkbox', 2);
+
+module('buildFormInputs select', buildSetup('[name="select"]'));
+buildTest('select', 1);
+
+module('buildFormInputs multipleSelect', buildSetup('[name="multipleSelect"]'));
+buildTest('multipleSelect', 1);
+
+module('buildFormInputs file', buildSetup('[name="file"]'));
+buildTest('file', 1);
+
+module('buildFormInputs multipleFile', buildSetup('[name="multipleFile"]'));
+buildTest('multipleFile', 1);

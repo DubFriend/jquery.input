@@ -1,6 +1,6 @@
 // jquery.input version 0.0.0
 // https://github.com/DubFriend/jquery.input
-// (MIT) 02-04-2014
+// (MIT) 03-04-2014
 // Brian Detering <BDeterin@gmail.com> (http://www.briandetering.net/)
 (function ($) {
 'use strict';
@@ -727,28 +727,32 @@ var createInputURL = function (fig) {
     return self;
 };
 
-var buildFormInputs = function ($self) {
-    var inputs = {};
+var buildFormInputs = function (fig) {
+    var inputs = {},
+        $self = fig.$;
 
-    constructor = {
+    var constructor = fig.constructorOverride || {
         text: createInputText,
+        url: createInputURL,
+        email: createInputEmail,
+        password: createInputPassword,
+        range: createInputRange,
         textarea: createInputTextarea,
         select: createInputSelect,
+        'select[multiple]': createInputMultipleSelect,
         radio: createInputRadio,
         checkbox: createInputCheckbox,
         file: createInputFile,
-        button: createInputButton,
-        hidden: createInputHidden,
-        range: createInputRange
+        'file[multiple]': createInputMultipleFile,
+        hidden: createInputHidden
     };
 
-    var addInputsBasic = function (type, selector, group) {
-        group = group || inputs;
+    var addInputsBasic = function (type, selector) {
         var $input = isObject(selector) ? selector : $self.find(selector);
 
         $input.each(function () {
             var name = $(this).attr('name');
-            group[name] = constructor[type]({
+            inputs[name] = constructor[type]({
                 $: $(this)
             });
         });
@@ -758,22 +762,35 @@ var buildFormInputs = function ($self) {
         var names = [],
             $input = isObject(selector) ? selector : $self.find(selector);
 
-        // group by name attribute
-        $input.each(function () {
-            if(indexOf(names, $(this).attr('name')) === -1) {
-                names.push($(this).attr('name'));
-            }
-        });
-
-        foreach(names, function (name) {
-            inputs[name] = constructor[type]({
-                $: $self.find('input[name="' + name + '"]')
+        if(isObject(selector)) {
+            inputs[$input.attr('name')] = constructor[type]({
+                $: $input
             });
-        });
+        }
+        else {
+            // group by name attribute
+            $input.each(function () {
+                var name = $(this).attr('name');
+
+                if(indexOf(names, $(this).attr('name')) === -1) {
+                    names.push($(this).attr('name'));
+                }
+            });
+
+            foreach(names, function (name) {
+                inputs[name] = constructor[type]({
+                    $: $self.find('input[name="' + name + '"]')
+                });
+            });
+        }
     };
 
+
     if($self.is('input, select, textarea')) {
-        if($self.is('input[type="text"]')) {
+        if($self.is('textarea')) {
+            addInputsBasic('textarea', $self);
+        }
+        else if($self.is('input[type="text"]')) {
             addInputsBasic('text', $self);
         }
         else if($self.is('input[type="password"]')) {
@@ -790,7 +807,7 @@ var buildFormInputs = function ($self) {
         }
         else if($self.is('select')) {
             if($self.is('[multiple]')) {
-                addInputsBasic('select', $self);
+                addInputsBasic('select[multiple]', $self);
             }
             else {
                 addInputsBasic('select', $self);
@@ -798,7 +815,7 @@ var buildFormInputs = function ($self) {
         }
         else if($self.is('input[type="file"]')) {
             if($self.is('[multiple]')) {
-                addInputsBasic('file', $self);
+                addInputsBasic('file[multiple]', $self);
             }
             else {
                 addInputsBasic('file', $self);
@@ -824,9 +841,10 @@ var buildFormInputs = function ($self) {
         addInputsBasic('text', 'input[type="url"]');
         addInputsBasic('range', 'input[type="range"]');
         addInputsBasic('textarea', 'textarea');
-        addInputsBasic('select', 'select');
-        addInputsBasic('file', 'input[type="file"]');
-        addInputsBasic('button', 'input[type="button"], input[type="submit"]');
+        addInputsBasic('select', 'select:not([multiple])');
+        addInputsBasic('select[multiple]', 'select[multiple]');
+        addInputsBasic('file', 'input[type="file"]:not([multiple])');
+        addInputsBasic('file[multiple]', 'input[type="file"][multiple]');
         addInputsBasic('hidden', 'input[type="hidden"]');
         addInputsGroup('radio', 'input[type="radio"]');
         addInputsGroup('checkbox', 'input[type="checkbox"]');

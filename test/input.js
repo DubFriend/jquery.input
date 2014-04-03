@@ -237,8 +237,6 @@ test("selectInput enable", testEnabled);
 
 
 
-
-
 module("createInputMultipleSelect", {
     setup: buildSetup({
         selector: '[name="multipleSelect"]',
