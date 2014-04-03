@@ -237,6 +237,64 @@ test("selectInput enable", testEnabled);
 
 
 
+
+
+module("createInputMultipleSelect", {
+    setup: buildSetup({
+        selector: '[name="multipleSelect"]',
+        createInput: createInputMultipleSelect
+    })
+});
+
+test("selectMultipleSelect get", function() {
+    this.$.val(['b']);
+    deepEqual(this.input.get(), ['b'], 'gets current value');
+});
+
+test("selectMultipleSelect clear", function () {
+    this.input.clear();
+    deepEqual(this.input.get(), [], 'input cleared');
+});
+
+test("selectMultipleSelect set", function () {
+    this.input.set(['b']);
+    deepEqual(this.input.get(), ['b'], 'text input value is set');
+});
+
+test("selectMultipleSelect set empty string", function () {
+    this.$.val(['a']);
+    this.input.set('');
+    deepEqual(this.input.get(), [], 'checkbox is cleared');
+});
+
+test("selectMultipleSelect set erases previously set", function() {
+    this.$.val(['a']);
+    this.input.set(['b']);
+    deepEqual(this.input.get(), ['b'], 'text input value is set');
+});
+
+test("selectMultipleSelect set multiple", function() {
+    this.input.set(['b', 'a']);
+    deepEqual(this.input.get(), ['a','b'], 'text input value is set');
+});
+
+test("selectMultipleSelect set wraps with array if set value not an array", function() {
+    this.input.set('b');
+    deepEqual(this.input.get(), ['b'], 'get data is wrapped');
+});
+
+test(
+    "selectMultipleSelect set publishes change on change",
+    testPublishesOnEvents('change')
+);
+
+test("selectMultipleSelect getType", testGetType('select[multiple]'));
+test("selectMultipleSelect disable", testDisabled);
+test("selectMultipleSelect enable", testEnabled);
+
+
+
+
 module("createInputRadio", {
     setup: buildSetup({
         selector: '[name="radio"]',
@@ -353,6 +411,31 @@ test("checkboxInput enable", testEnabled);
 
 
 
+module("createInputFile", {
+    setup: buildSetup({
+        selector: '[name="file"]',
+        createInput: createInputFile
+    })
+});
+
+test("fileInput clear", testClear);
+test("fileInput getType", testGetType('file'));
+test("fileInput disable", testDisabled);
+test("fileInput enable", testEnabled);
+test("fileInput getFileName, file not set", function () {
+    strictEqual(this.input.get(), '');
+});
+
+test("fileInput publishes filename when file changed", function () {
+    expect(1);
+    this.input.subscribe('change', function (input) {
+        strictEqual(input.get(), '', 'publishes');
+    });
+    this.$.change();
+});
+
+
+
 module("createInputMultipleFile", {
     setup: buildSetup({
         selector: '[name="multipleFile"]',
@@ -380,27 +463,3 @@ test("multipleFileInput publishes filename when file changed", function () {
     this.$.change();
 });
 
-
-
-module("createInputFile", {
-    setup: buildSetup({
-        selector: '[name="file"]',
-        createInput: createInputFile
-    })
-});
-
-test("fileInput clear", testClear);
-test("fileInput getType", testGetType('file'));
-test("fileInput disable", testDisabled);
-test("fileInput enable", testEnabled);
-test("fileInput getFileName, file not set", function () {
-    strictEqual(this.input.get(), '');
-});
-
-test("fileInput publishes filename when file changed", function () {
-    expect(1);
-    this.input.subscribe('change', function (input) {
-        strictEqual(input.get(), '', 'publishes');
-    });
-    this.$.change();
-});

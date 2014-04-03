@@ -481,9 +481,7 @@ var createInputCheckbox = function (fig) {
     self.get = function () {
         var values = [];
         self.$().filter(':checked').each(function () {
-            if($(this).is(':checked')) {
-                values.push($(this).val());
-            }
+            values.push($(this).val());
         });
         return values;
     };
@@ -579,17 +577,14 @@ var createInputMultipleFile = function (fig) {
 
     self.get = function () {
         // http://stackoverflow.com/questions/14035530/how-to-get-value-of-html-5-multiple-file-upload-variable-using-jquery
-        // var fileList = mapToArray(excludedSet(self.$().get(0).files || {}, 'length'), identity);
-        var fileListObject = self.$().get(0).files || [];
-        var names = [];
-        var i;
+        var fileListObject = self.$().get(0).files || [],
+            names = [], i;
+
         for(i = 0; i < (fileListObject.length || 0); i += 1) {
             names.push(fileList[i].name);
         }
-        return names;
 
-        // console.log(fileList[0]);
-        // return pluck(fileList, 'name');
+        return names;
     };
 
     self.clear = function () {
@@ -607,6 +602,41 @@ var createInputMultipleFile = function (fig) {
     return self;
 };
 
+var createInputMultipleSelect = function (fig) {
+    var my = {},
+        self = createInput(fig, my);
+
+    self.getType = function () {
+        return 'select[multiple]';
+    };
+
+    self.get = function () {
+        return self.$().val() || [];
+    };
+
+    self.set = function (newValues) {
+        self.$().val(
+            newValues === '' ? [] : isArray(newValues) ? newValues : [newValues]
+        );
+    };
+
+    my.equalTo = function (a, b) {
+        a = isArray(a) ? a : [a];
+        b = isArray(b) ? b : [b];
+
+        var isEqual = true;
+        foreach(a, function (value) {
+            if(!inArray(b, value)) {
+                isEqual = false;
+            }
+        });
+        return isEqual;
+    };
+
+    self.$().change(my.publishChange);
+
+    return self;
+};
 
 var createInputRadio = function (fig) {
     var my = {},

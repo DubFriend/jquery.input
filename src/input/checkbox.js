@@ -9,9 +9,7 @@ var createInputCheckbox = function (fig) {
     self.get = function () {
         var values = [];
         self.$().filter(':checked').each(function () {
-            if($(this).is(':checked')) {
-                values.push($(this).val());
-            }
+            values.push($(this).val());
         });
         return values;
     };
