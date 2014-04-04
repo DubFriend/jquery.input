@@ -6,7 +6,9 @@ var createInputTextarea = function (fig) {
         return 'textarea';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };

@@ -26,8 +26,9 @@ var createInputMultipleFile = function (fig) {
         });
     };
 
-    self.$().change(function () {
-        self.publish('change', self);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+        // self.publish('change', self);
     });
 
     return self;

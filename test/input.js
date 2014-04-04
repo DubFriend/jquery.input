@@ -75,14 +75,17 @@ var testPublishesOnEvents = function () {
     var events = argumentsToArray(arguments);
     return function () {
         var self = this;
-        expect(events.length);
+        expect(events.length * 2);
         var value = self.testValue || 'a';
         self.input.set(value);
 
         foreach(events, function (ev) {
-            self.input.subscribe('change', function (e) {
-                ok(e.preventDefault, 'passed event object');
-
+            self.input.subscribe('change', function (data) {
+                ok(data.e.preventDefault, 'passed event object');
+                strictEqual(
+                    $(data.domElement).attr('name'), self.input.$().attr('name'),
+                    '"this" set to dom element'
+                );
             });
         });
 
@@ -328,10 +331,14 @@ test("radioInput clear", function () {
 });
 
 test("radioInput set publishes change on change", function () {
-    expect(1);
+    expect(2);
     this.input.set('b');
-    this.input.subscribe('change', function (e) {
-        ok(e.preventDefault, 'passed event object');
+    this.input.subscribe('change', function (data) {
+        ok(data.e.preventDefault, 'passed event object');
+        strictEqual(
+            $(data.domElement).attr('name'), 'radio',
+            '"this" set to dom element'
+        );
     });
     this.$.filter('[value="a"]').change();
 });
@@ -387,17 +394,25 @@ test("checkboxInput set wraps with array if set value not an array", function() 
 });
 
 test("checkboxInput set publishes change on click", function () {
-    expect(1);
-    this.input.subscribe('change', function (e) {
-        ok(e.preventDefault, 'passed event object');
+    expect(2);
+    this.input.subscribe('change', function (data) {
+        ok(data.e.preventDefault, 'passed event object');
+        strictEqual(
+            $(data.domElement).attr('name'), 'checkbox',
+            '"this" set to dom element'
+        );
     });
     this.$.filter('[value="a"]').click();
 });
 
 test("checkboxInput set publishes change on change", function () {
-    expect(1);
-    this.input.subscribe('change', function (e) {
-        ok(e.preventDefault, 'passed event object');
+    expect(2);
+    this.input.subscribe('change', function (data) {
+        ok(data.e.preventDefault, 'passed event object');
+        strictEqual(
+            $(data.domElement).attr('name'), 'checkbox',
+            '"this" set to dom element'
+        );
     });
     this.$.filter('[value="a"]').prop('checked', true);
     this.$.filter('[value="a"]').change();
@@ -425,9 +440,13 @@ test("fileInput getFileName, file not set", function () {
 });
 
 test("fileInput publishes filename when file changed", function () {
-    expect(1);
-    this.input.subscribe('change', function (input) {
-        strictEqual(input.get(), '', 'publishes');
+    expect(2);
+    this.input.subscribe('change', function (data) {
+        ok(data.e.preventDefault, 'passed event object');
+        strictEqual(
+            $(data.domElement).attr('name'), 'file',
+            '"this" set to dom element'
+        );
     });
     this.$.change();
 });
@@ -454,9 +473,13 @@ test("multipleFileInput getFileName, file not set", function () {
 });
 
 test("multipleFileInput publishes filename when file changed", function () {
-    expect(1);
-    this.input.subscribe('change', function (input) {
-        deepEqual(input.get(), [], 'publishes');
+    expect(2);
+    this.input.subscribe('change', function (data) {
+        ok(data.e.preventDefault, 'passed event object');
+        strictEqual(
+            $(data.domElement).attr('name'), 'multipleFile',
+            '"this" set to dom element'
+        );
     });
     this.$.change();
 });

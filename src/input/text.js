@@ -6,7 +6,9 @@ var createInputText = function (fig) {
         return 'text';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };

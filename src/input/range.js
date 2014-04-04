@@ -6,7 +6,9 @@ var createInputRange = function (fig) {
         return 'range';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };

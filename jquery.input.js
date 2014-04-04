@@ -428,6 +428,20 @@ var createBaseInput = function (fig, my) {
         self.publish('isEnabled', true);
     };
 
+    my.equalTo = function (a, b) {
+        return a === b;
+    };
+
+    my.publishChange = (function () {
+        var oldValue;
+        return function (e, domElement) {
+            var newValue = self.get();
+            if(!my.equalTo(newValue, oldValue)) {
+                self.publish('change', { e: e, domElement: domElement });
+            }
+        };
+    }());
+
     return self;
 };
 
@@ -453,19 +467,9 @@ var createInput = function (fig, my) {
         };
     };
 
-    my.equalTo = function (a, b) {
-        return a === b;
-    };
 
-    my.publishChange = (function () {
-        var oldValue;
-        return function (e) {
-            var newValue = self.get();
-            if(!my.equalTo(newValue, oldValue)) {
-                self.publish('change', e);
-            }
-        };
-    }());
+
+
 
     return self;
 };
@@ -512,7 +516,9 @@ var createInputCheckbox = function (fig) {
         return isEqual;
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -548,8 +554,9 @@ var createInputFile = function (fig) {
         });
     };
 
-    self.$().change(function () {
-        self.publish('change', self);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+        // self.publish('change', self);
     });
 
     return self;
@@ -595,8 +602,9 @@ var createInputMultipleFile = function (fig) {
         });
     };
 
-    self.$().change(function () {
-        self.publish('change', self);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+        // self.publish('change', self);
     });
 
     return self;
@@ -633,7 +641,9 @@ var createInputMultipleSelect = function (fig) {
         return isEqual;
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -659,7 +669,9 @@ var createInputRadio = function (fig) {
         }
     });
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -672,7 +684,9 @@ var createInputRange = function (fig) {
         return 'range';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -685,7 +699,9 @@ var createInputSelect = function (fig) {
         return 'select';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -698,7 +714,9 @@ var createInputText = function (fig) {
         return 'text';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -711,7 +729,9 @@ var createInputTextarea = function (fig) {
         return 'textarea';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -957,37 +977,47 @@ var createFactory = function (fig) {
 $.fn.inputVal = function (newValue) {
     var $self = $(this);
 
-    var inputs = buildFormInputs($self);
+    var inputs = buildFormInputs({ $: $self });
 
-    if(newValue) {
-
-
-        // return $self.val(newValue);
+    if($self.is('input, textarea, select')) {
+        if(typeof newValue === 'undefined') {
+            return inputs.get();
+        }
+        else {
+            inputs.set(newValue);
+            return $self;
+        }
     }
     else {
-        // return $self.val();
+        if(typeof newValue === 'undefined') {
+            return call(inputs, 'get');
+        }
+        else {
+            foreach(newValue, function (value, inputName) {
+                inputs[inputName].set(value);
+            });
+            return $self;
+        }
     }
 };
 
-$.fn.inputChange = function (callback) {
+$.fn.inputOnChange = function (callback) {
     var $self = $(this);
-
-    var inputs = buildFormInputs($self);
-
+    var inputs = buildFormInputs({ $: $self });
     foreach(inputs, function (input) {
-        input.subscribe('change', callback);
+        input.subscribe('change', function (data) {
+            callback.call(data.domElement, data.e);
+        });
     });
-
     return $self;
-
-    // return $self.change(callback);
 };
 
 $.fn.inputDisable = function () {
-
+    call(buildFormInputs({ $: $(this) }), 'disable');
 };
 
 $.fn.inputEnable = function () {
-
+    call(buildFormInputs({ $: $(this) }), 'enable');
 };
+
 }(jQuery));

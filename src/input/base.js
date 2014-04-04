@@ -20,6 +20,20 @@ var createBaseInput = function (fig, my) {
         self.publish('isEnabled', true);
     };
 
+    my.equalTo = function (a, b) {
+        return a === b;
+    };
+
+    my.publishChange = (function () {
+        var oldValue;
+        return function (e, domElement) {
+            var newValue = self.get();
+            if(!my.equalTo(newValue, oldValue)) {
+                self.publish('change', { e: e, domElement: domElement });
+            }
+        };
+    }());
+
     return self;
 };
 
@@ -45,19 +59,9 @@ var createInput = function (fig, my) {
         };
     };
 
-    my.equalTo = function (a, b) {
-        return a === b;
-    };
 
-    my.publishChange = (function () {
-        var oldValue;
-        return function (e) {
-            var newValue = self.get();
-            if(!my.equalTo(newValue, oldValue)) {
-                self.publish('change', e);
-            }
-        };
-    }());
+
+
 
     return self;
 };

@@ -29,7 +29,9 @@ var createInputMultipleSelect = function (fig) {
         return isEqual;
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };

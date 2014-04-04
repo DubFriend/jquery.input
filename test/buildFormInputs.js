@@ -33,11 +33,12 @@ var buildSetup = function (selector) {
     };
 };
 
-module('buildFormInputs', buildSetup());
-
 var buildTest = function (name, length) {
     test(name + ' length', function () {
-        deepEqual(this.inputs[name].$.length, length, length + ' html element(s)');
+        deepEqual(
+            this.inputs[name].$.length, length,
+            length + ' html element(s)'
+        );
     });
 
     test(name + ' name(s)', function () {
@@ -47,6 +48,7 @@ var buildTest = function (name, length) {
     });
 };
 
+module('buildFormInputs', buildSetup());
 
 buildTest('text', 1);
 buildTest('password', 1);
