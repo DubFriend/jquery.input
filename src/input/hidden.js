@@ -6,7 +6,9 @@ var createInputHidden = function (fig) {
         return 'hidden';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };

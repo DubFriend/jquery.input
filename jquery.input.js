@@ -570,7 +570,9 @@ var createInputHidden = function (fig) {
         return 'hidden';
     };
 
-    self.$().change(my.publishChange);
+    self.$().change(function (e) {
+        my.publishChange(e, this);
+    });
 
     return self;
 };
@@ -981,10 +983,10 @@ $.fn.inputVal = function (newValue) {
 
     if($self.is('input, textarea, select')) {
         if(typeof newValue === 'undefined') {
-            return inputs.get();
+            return inputs[$self.attr('name')].get();
         }
         else {
-            inputs.set(newValue);
+            inputs[$self.attr('name')].set(newValue);
             return $self;
         }
     }

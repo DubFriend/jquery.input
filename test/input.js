@@ -116,6 +116,24 @@ test(
 );
 
 
+module("createInputHidden", {
+    setup: buildSetup({
+        selector: 'input[name="hidden"]',
+        createInput: createInputHidden
+    })
+});
+
+test("textInput get", testGet);
+test("textInput set", testSet);
+test("textInput clear", testClear);
+test("textInput getType", testGetType('hidden'));
+test("textInput disable", testDisabled);
+test("textInput enable", testEnabled);
+test(
+    "textInput set publishes change on keyup, keydown",
+    testPublishesOnEvents('keyup', 'keydown', 'change')
+);
+
 
 module("createInputPassword", {
     setup: buildSetup({
