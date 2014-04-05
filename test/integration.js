@@ -50,7 +50,21 @@ test("inputVal set from container", function () {
     });
 });
 
-// disable, enable
+test("inputDisable", function () {
+    this.$.inputDisable();
+    this.$.find('input, select, textarea').each(function () {
+        strictEqual($(this).prop('disabled'), true);
+    });
+});
+
+test("inputDisable", function () {
+    this.$.inputDisable();
+    this.$.find('input, select, textarea').prop('disabled', true);
+    this.$.inputEnable();
+    this.$.find('input, select, textarea').each(function () {
+        strictEqual($(this).prop('disabled'), false);
+    });
+});
 
 var buildTestInputOnChangeFromContainer = function (selector, name) {
     test("inputOnChange from container " + name, function () {
