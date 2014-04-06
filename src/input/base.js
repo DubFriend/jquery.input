@@ -31,6 +31,7 @@ var createBaseInput = function (fig, my) {
             if(!my.equalTo(newValue, oldValue)) {
                 self.publish('change', { e: e, domElement: domElement });
             }
+            oldValue = newValue;
         };
     }());
 
@@ -59,9 +60,24 @@ var createInput = function (fig, my) {
         };
     };
 
-
-
-
-
     return self;
+};
+
+var inputEqualToArray = function (a, b) {
+    a = isArray(a) ? a : [a];
+    b = isArray(b) ? b : [b];
+
+    var isEqual = true;
+    if(a.length !== b.length) {
+        isEqual = false;
+    }
+    else {
+        foreach(a, function (value) {
+            if(!inArray(b, value)) {
+                isEqual = false;
+            }
+        });
+    }
+
+    return isEqual;
 };

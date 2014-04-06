@@ -5,9 +5,52 @@
     <title>QUnit Example</title>
 </head>
 <body>
-    <!-- @include html/input.html -->
+    <h2>Input Elements</h2>
+    <div class="js-input-elements">
+        <!-- @include html/input.html -->
+    </div>
+
+    <h3>inputOnChange</h3>
+    <div class="on-change-display"></div>
+
+    <h2>Input Element Setters</h2>
+    <div class="js-setter-inputs">
+        <!-- @include html/input.html -->
+    </div>
 
     <script src="jquery-1.11.0.js"></script>
     <script src="jquery.input.js"></script>
+    <script>
+        $(document).ready(function () {
+            'use strict';
+            var $onChangeDisplay = $('.on-change-display');
+            var $inputElements = $('.js-input-elements');
+
+            $inputElements.inputOnChange(function (e) {
+                $onChangeDisplay.html($(this).inputVal());
+                console.log('container on change', $(this).inputVal());
+            });
+
+            $inputElements.find('input[name="checkbox"]').inputOnChange(function (e) {
+                console.log('checkbox on change', $(this).inputVal());
+            });
+
+            $inputElements.find('input[name="text"]').inputOnChange(function (e) {
+                console.log('text on change', $(this).inputVal());
+            });
+
+            var $setterInputs = $('.js-setter-inputs');
+
+            $setterInputs.inputOnChange(function (e) {
+                var $self = $(this);
+                var name = $self.attr('name');
+                if(!$self.is('input[type="file"]')) {
+                    $inputElements.find('[name="' + name + '"]').inputVal(
+                        $setterInputs.find('[name="' + name + '"]').inputVal()
+                    );
+                }
+            });
+        });
+    </script>
 </body>
 </html>

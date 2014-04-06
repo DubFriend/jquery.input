@@ -6,7 +6,8 @@ var createInputText = function (fig) {
         return 'text';
     };
 
-    self.$().change(function (e) {
+
+    self.$().on('change keyup keydown', function (e) {
         my.publishChange(e, this);
     });
 

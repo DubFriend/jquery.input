@@ -16,18 +16,7 @@ var createInputMultipleSelect = function (fig) {
         );
     };
 
-    my.equalTo = function (a, b) {
-        a = isArray(a) ? a : [a];
-        b = isArray(b) ? b : [b];
-
-        var isEqual = true;
-        foreach(a, function (value) {
-            if(!inArray(b, value)) {
-                isEqual = false;
-            }
-        });
-        return isEqual;
-    };
+    my.equalTo = inputEqualToArray;
 
     self.$().change(function (e) {
         my.publishChange(e, this);

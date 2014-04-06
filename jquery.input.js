@@ -1,6 +1,6 @@
 // jquery.input version 0.0.0
 // https://github.com/DubFriend/jquery.input
-// (MIT) 04-04-2014
+// (MIT) 06-04-2014
 // Brian Detering <BDeterin@gmail.com> (http://www.briandetering.net/)
 (function ($) {
 'use strict';
@@ -439,6 +439,7 @@ var createBaseInput = function (fig, my) {
             if(!my.equalTo(newValue, oldValue)) {
                 self.publish('change', { e: e, domElement: domElement });
             }
+            oldValue = newValue;
         };
     }());
 
@@ -467,11 +468,26 @@ var createInput = function (fig, my) {
         };
     };
 
-
-
-
-
     return self;
+};
+
+var inputEqualToArray = function (a, b) {
+    a = isArray(a) ? a : [a];
+    b = isArray(b) ? b : [b];
+
+    var isEqual = true;
+    if(a.length !== b.length) {
+        isEqual = false;
+    }
+    else {
+        foreach(a, function (value) {
+            if(!inArray(b, value)) {
+                isEqual = false;
+            }
+        });
+    }
+
+    return isEqual;
 };
 
 var createInputCheckbox = function (fig) {
@@ -503,18 +519,7 @@ var createInputCheckbox = function (fig) {
         });
     };
 
-    my.equalTo = function (a, b) {
-        a = isArray(a) ? a : [a];
-        b = isArray(b) ? b : [b];
-
-        var isEqual = true;
-        foreach(a, function (value) {
-            if(!inArray(b, value)) {
-                isEqual = false;
-            }
-        });
-        return isEqual;
-    };
+    my.equalTo = inputEqualToArray;
 
     self.$().change(function (e) {
         my.publishChange(e, this);
@@ -590,7 +595,7 @@ var createInputMultipleFile = function (fig) {
             names = [], i;
 
         for(i = 0; i < (fileListObject.length || 0); i += 1) {
-            names.push(fileList[i].name);
+            names.push(fileListObject[i].name);
         }
 
         return names;
@@ -606,7 +611,6 @@ var createInputMultipleFile = function (fig) {
 
     self.$().change(function (e) {
         my.publishChange(e, this);
-        // self.publish('change', self);
     });
 
     return self;
@@ -630,22 +634,22 @@ var createInputMultipleSelect = function (fig) {
         );
     };
 
-    my.equalTo = function (a, b) {
-        a = isArray(a) ? a : [a];
-        b = isArray(b) ? b : [b];
-
-        var isEqual = true;
-        foreach(a, function (value) {
-            if(!inArray(b, value)) {
-                isEqual = false;
-            }
-        });
-        return isEqual;
-    };
+    my.equalTo = inputEqualToArray;
 
     self.$().change(function (e) {
         my.publishChange(e, this);
     });
+
+    return self;
+};
+
+var createInputPassword = function (fig) {
+    var my = {},
+        self = createInputText(fig, my);
+
+    self.getType = function () {
+        return 'password';
+    };
 
     return self;
 };
@@ -716,7 +720,8 @@ var createInputText = function (fig) {
         return 'text';
     };
 
-    self.$().change(function (e) {
+
+    self.$().on('change keyup keydown', function (e) {
         my.publishChange(e, this);
     });
 
@@ -731,7 +736,7 @@ var createInputTextarea = function (fig) {
         return 'textarea';
     };
 
-    self.$().change(function (e) {
+    self.$().on('change keyup keydown', function (e) {
         my.publishChange(e, this);
     });
 

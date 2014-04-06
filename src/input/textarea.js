@@ -6,7 +6,7 @@ var createInputTextarea = function (fig) {
         return 'textarea';
     };
 
-    self.$().change(function (e) {
+    self.$().on('change keyup keydown', function (e) {
         my.publishChange(e, this);
     });
 

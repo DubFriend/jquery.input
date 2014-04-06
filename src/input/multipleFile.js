@@ -12,7 +12,7 @@ var createInputMultipleFile = function (fig) {
             names = [], i;
 
         for(i = 0; i < (fileListObject.length || 0); i += 1) {
-            names.push(fileList[i].name);
+            names.push(fileListObject[i].name);
         }
 
         return names;
@@ -28,7 +28,6 @@ var createInputMultipleFile = function (fig) {
 
     self.$().change(function (e) {
         my.publishChange(e, this);
-        // self.publish('change', self);
     });
 
     return self;
