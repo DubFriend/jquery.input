@@ -30,6 +30,7 @@ $.fn.inputOnChange = function (callback) {
     var inputs = buildFormInputs({ $: $self });
     foreach(inputs, function (input) {
         input.subscribe('change', function (data) {
+            // console.log($(data.domElement).is(':checked'));
             callback.call(data.domElement, data.e);
         });
     });

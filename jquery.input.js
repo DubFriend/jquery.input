@@ -666,14 +666,27 @@ var createInputRadio = function (fig) {
         return self.$().filter(':checked').val() || null;
     };
 
-    self.set = my.buildSetter(function (newValue) {
+    self.set = function (newValue) {
         if(!newValue) {
-            self.$().prop('checked', false);
+            self.$().each(function () {
+                $(this).prop('checked', false);
+            });
+            // self.$().prop('checked', false);
         }
         else {
             self.$().filter('[value="' + newValue + '"]').prop('checked', true);
         }
-    });
+    };
+
+    // self.set = my.buildSetter(function (newValue) {
+    //     console.log('set : ', newValue, self.$());
+    //     if(!newValue) {
+    //         self.$().prop('checked', false);
+    //     }
+    //     else {
+    //         self.$().filter('[value="' + newValue + '"]').prop('checked', true);
+    //     }
+    // });
 
     self.$().change(function (e) {
         my.publishChange(e, this);
@@ -1013,6 +1026,7 @@ $.fn.inputOnChange = function (callback) {
     var inputs = buildFormInputs({ $: $self });
     foreach(inputs, function (input) {
         input.subscribe('change', function (data) {
+            // console.log($(data.domElement).is(':checked'));
             callback.call(data.domElement, data.e);
         });
     });

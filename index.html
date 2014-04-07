@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>QUnit Example</title>
+    <title>jQuery.input</title>
 </head>
 <body>
     <h2>Input Elements</h2>
@@ -41,7 +41,6 @@
                 <textarea name="textarea"></textarea>
             </div>
         
-        
             <div>
                 <input type="radio" name="radio" value="a"/>a
                 <input type="radio" name="radio" value="b"/>b
@@ -84,10 +83,11 @@
                 <input type="file" name="multipleFile" multiple/>
             </div>
         </div>
+        
     </div>
 
     <h3>inputOnChange</h3>
-    <div class="on-change-display"></div>
+    <div class="js-on-change-display"></div>
 
     <h2>Input Element Setters</h2>
     <div class="js-setter-inputs">
@@ -125,7 +125,6 @@
                 <textarea name="textarea"></textarea>
             </div>
         
-        
             <div>
                 <input type="radio" name="radio" value="a"/>a
                 <input type="radio" name="radio" value="b"/>b
@@ -168,6 +167,12 @@
                 <input type="file" name="multipleFile" multiple/>
             </div>
         </div>
+        
+    </div>
+
+    <div>
+        <input type="radio" name="radio-set" value="a"/>a
+        <input type="radio" name="radio-set" value="b"/>b
     </div>
 
     <script src="jquery-1.11.0.js"></script>
@@ -175,7 +180,7 @@
     <script>
         $(document).ready(function () {
             'use strict';
-            var $onChangeDisplay = $('.on-change-display');
+            var $onChangeDisplay = $('.js-on-change-display');
             var $inputElements = $('.js-input-elements');
 
             $inputElements.inputOnChange(function (e) {
@@ -193,13 +198,22 @@
 
             var $setterInputs = $('.js-setter-inputs');
 
+            // looks like html groups radio inputs by name globally so have to
+            // remove the duplicates here.
+            $setterInputs.find('input[name="radio"]').parent().remove();
+            // use a set with different names instead.
+            $('input[name="radio-set"]').inputOnChange(function (e) {
+                $inputElements.inputVal({
+                    radio: $('input[name="radio-set"]').inputVal()
+                });
+            });
+
             $setterInputs.inputOnChange(function (e) {
                 var $self = $(this);
                 var name = $self.attr('name');
                 if(!$self.is('input[type="file"]')) {
-                    $inputElements.find('[name="' + name + '"]').inputVal(
-                        $setterInputs.find('[name="' + name + '"]').inputVal()
-                    );
+                    var value = $setterInputs.find('[name="' + name + '"]').inputVal();
+                    $inputElements.find('[name="' + name + '"]').inputVal(value);
                 }
             });
         });
