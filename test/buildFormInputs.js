@@ -7,6 +7,7 @@ var builderBuildFormInputs = function (selector) {
             $fixture.find('.js-container').find(selector) :
             $fixture.find('.js-container'),
         constructorOverride: {
+            button: identity,
             text: identity,
             url: identity,
             email: identity,
@@ -48,8 +49,11 @@ var buildTest = function (name, length) {
     });
 };
 
+// test buildFormInputs when selecting a container element
+
 module('buildFormInputs', buildSetup());
 
+buildTest('button', 1);
 buildTest('text', 1);
 buildTest('password', 1);
 buildTest('email', 1);
@@ -64,6 +68,11 @@ buildTest('select2', 1);
 buildTest('multipleSelect', 1);
 buildTest('file', 1);
 buildTest('multipleFile', 1);
+
+// test buildFormInputs when selecting a specific input
+
+module('buildFormInputs button', buildSetup('[name="button"]'));
+buildTest('button', 1);
 
 module('buildFormInputs text', buildSetup('[name="text"]'));
 buildTest('text', 1);

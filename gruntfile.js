@@ -34,6 +34,7 @@ module.exports = function (grunt) {
                     'src/intro.js',
                     'src/library.js',
                     'src/input/base.js',
+                    'src/input/button.js',
                     'src/input/checkbox.js',
                     'src/input/email.js',
                     'src/input/file.js',

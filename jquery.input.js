@@ -1,6 +1,6 @@
 // jquery.input version 0.0.0
 // https://github.com/DubFriend/jquery.input
-// (MIT) 06-04-2014
+// (MIT) 08-04-2014
 // Brian Detering <BDeterin@gmail.com> (http://www.briandetering.net/)
 (function ($) {
 'use strict';
@@ -490,6 +490,21 @@ var inputEqualToArray = function (a, b) {
     return isEqual;
 };
 
+var createInputButton = function (fig) {
+    var my = {},
+        self = createInput(fig, my);
+
+    self.getType = function () {
+        return 'button';
+    };
+
+    self.$().on('change', function (e) {
+        my.publishChange(e, this);
+    });
+
+    return self;
+};
+
 var createInputCheckbox = function (fig) {
     var my = {},
         self = createInput(fig, my);
@@ -772,6 +787,7 @@ var buildFormInputs = function (fig) {
         $self = fig.$;
 
     var constructor = fig.constructorOverride || {
+        button: createInputButton,
         text: createInputText,
         url: createInputURL,
         email: createInputEmail,
@@ -827,20 +843,23 @@ var buildFormInputs = function (fig) {
 
 
     if($self.is('input, select, textarea')) {
-        if($self.is('textarea')) {
+        if($self.is('input[type="button"], button, input[type="submit"]')) {
+            addInputsBasic('button', $self);
+        }
+        else if($self.is('textarea')) {
             addInputsBasic('textarea', $self);
         }
         else if($self.is('input[type="text"]')) {
             addInputsBasic('text', $self);
         }
         else if($self.is('input[type="password"]')) {
-            addInputsBasic('text', $self);
+            addInputsBasic('password', $self);
         }
         else if($self.is('input[type="email"]')) {
-            addInputsBasic('text', $self);
+            addInputsBasic('email', $self);
         }
         else if($self.is('input[type="url"]')) {
-            addInputsBasic('text', $self);
+            addInputsBasic('url', $self);
         }
         else if($self.is('input[type="range"]')) {
             addInputsBasic('range', $self);
@@ -875,10 +894,11 @@ var buildFormInputs = function (fig) {
         }
     }
     else {
+        addInputsBasic('button', 'input[type="button"], button, input[type="submit"]');
         addInputsBasic('text', 'input[type="text"]');
-        addInputsBasic('text', 'input[type="password"]');
-        addInputsBasic('text', 'input[type="email"]');
-        addInputsBasic('text', 'input[type="url"]');
+        addInputsBasic('password', 'input[type="password"]');
+        addInputsBasic('email', 'input[type="email"]');
+        addInputsBasic('url', 'input[type="url"]');
         addInputsBasic('range', 'input[type="range"]');
         addInputsBasic('textarea', 'textarea');
         addInputsBasic('select', 'select:not([multiple])');

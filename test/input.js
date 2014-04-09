@@ -96,6 +96,25 @@ var testPublishesOnEvents = function () {
 };
 
 
+module("createInputButton", {
+    setup: buildSetup({
+        selector: 'input[name="button"]',
+        createInput: createInputButton
+    })
+});
+
+test("buttonInput get", testGet);
+test("buttonInput set", testSet);
+test("buttonInput clear", testClear);
+test("buttonInput getType", testGetType('button'));
+test("buttonInput disable", testDisabled);
+test("buttonInput enable", testEnabled);
+test(
+    "buttonInput set publishes change",
+    testPublishesOnEvents('change')
+);
+
+
 
 module("createInputText", {
     setup: buildSetup({

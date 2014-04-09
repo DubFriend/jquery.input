@@ -22,8 +22,9 @@ $input.inputVal('foo');
 ````
 
 "inputVal" sets and gets inputs with string, with the exception of checkboxes,
-multiple select's and multiple file inputs.  These elements are set with arrays
-(since they can hold multiple values)
+multiple select's and multiple file inputs.  These elements are get set with arrays
+(since they can hold multiple values).  Note that file inputs cannot be set, and its
+get value will be the name of its selected file.
 ```javascript
 // checks checkboxes with values 'a' and 'c', all other checkboxes are unchecked.
 $checkboxGroup.inputVal(['a', 'c']);
@@ -49,11 +50,12 @@ children will be searched for all input elements with name attributes.
 // get returns containing input values that have name attributes as an object
 // where the keys are the names of the inputs, and the values are the inputs
 // values.
+$('.container').inputVal();
+//might return
 // {
 //     'text-input': 'foo',
 //     'multiple-select-input': ['a', 'b']
 // }
-$('.container').inputVal();
 
 // set a container by passing an object whose keys are the names attributes
 // of the input to set.

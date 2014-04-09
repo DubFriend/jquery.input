@@ -23,6 +23,7 @@ module("integration", {
 
 test("inputVal get from container", function () {
     deepEqual(this.$.inputVal(), {
+        button: 'button-value',
         checkbox: ['b'], checkbox2: [],
         email: '', file: '', multipleFile: [],
         multipleSelect: ['a', 'b'], password: '',
@@ -34,6 +35,7 @@ test("inputVal get from container", function () {
 
 test("inputVal set from container", function () {
     this.$.inputVal({
+        button: 'button',
         checkbox: ['a', 'b'], email: 'email', multipleSelect: ['a'],
         password: 'password', radio: 'b', range: '5',
         select: 'a', text: 'text', textarea: 'textarea',
@@ -41,6 +43,7 @@ test("inputVal set from container", function () {
     });
 
     deepEqual(this.$.inputVal(), {
+        button: 'button',
         checkbox: ['a', 'b'], checkbox2: [],
         email: 'email', file: '', multipleFile: [],
         multipleSelect: ['a'], password: 'password',
@@ -77,6 +80,7 @@ var buildTestInputOnChangeFromContainer = function (selector, name) {
     });
 };
 
+buildTestInputOnChangeFromContainer('[name="button"]', 'button');
 buildTestInputOnChangeFromContainer('[name="checkbox"][value="a"]', 'checkbox');
 buildTestInputOnChangeFromContainer('[name="email"]', 'email');
 buildTestInputOnChangeFromContainer('[name="file"]', 'file');
@@ -131,12 +135,21 @@ var buildInputIntegrationTests = function (fig) {
     });
 };
 
+
+
 buildInputIntegrationTests({
     selector: '[name="checkbox"]',
     changeSelector: '[name="checkbox"][value="a"]',
     name: 'checkbox',
     expectedGetValue: ['b'],
     setValue: ['a']
+});
+
+buildInputIntegrationTests({
+    selector: '[name="button"]',
+    name: 'button',
+    expectedGetValue: 'button-value',
+    setValue: 'new value'
 });
 
 buildInputIntegrationTests({
