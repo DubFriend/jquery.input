@@ -1046,7 +1046,6 @@ $.fn.inputOnChange = function (callback) {
     var inputs = buildFormInputs({ $: $self });
     foreach(inputs, function (input) {
         input.subscribe('change', function (data) {
-            // console.log($(data.domElement).is(':checked'));
             callback.call(data.domElement, data.e);
         });
     });
@@ -1054,11 +1053,21 @@ $.fn.inputOnChange = function (callback) {
 };
 
 $.fn.inputDisable = function () {
-    call(buildFormInputs({ $: $(this) }), 'disable');
+    var $self = $(this);
+    call(buildFormInputs({ $: $self }), 'disable');
+    return $self;
 };
 
 $.fn.inputEnable = function () {
-    call(buildFormInputs({ $: $(this) }), 'enable');
+    var $self = $(this);
+    call(buildFormInputs({ $: $self }), 'enable');
+    return $self;
+};
+
+$.fn.inputClear = function () {
+    var $self = $(this);
+    call(buildFormInputs({ $: $self }), 'clear');
+    return $self;
 };
 
 }(jQuery));

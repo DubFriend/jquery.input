@@ -53,6 +53,20 @@ test("inputVal set from container", function () {
     });
 });
 
+test("inputClear set from container", function () {
+    this.$.inputVal({ range: '3' });
+    this.$.inputClear();
+    deepEqual(this.$.inputVal(), {
+        button: '',
+        checkbox: [], checkbox2: [],
+        email: '', file: '', multipleFile: [],
+        multipleSelect: [], password: '',
+        radio: null, range: '5', select: null,
+        select2: null, text: '', textarea: '',
+        url: '', hidden: ''
+    });
+});
+
 test("inputDisable", function () {
     this.$.inputDisable();
     this.$.find('input, select, textarea').each(function () {

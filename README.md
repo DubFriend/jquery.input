@@ -106,5 +106,7 @@ $('.container').inputEnable();
 ```
 
 ###inputClear
-
-
+Clears the input's value.
+```javascript
+$input.inputClear();
+```
