@@ -1,30 +1,35 @@
 #jquery.input
 ##A normalized interface for html input elements.
 
-jquery.input exposes a single interface for setting and getting the value of
-html inputs as well as a single interface for detecting html input value changes.
+jquery.input exposes a unified interface for interacting with html input elements.
+You can call the methods on specific input elements `$('input[name="foo"]').inputVal('bar');`
+groups of radio buttons or checkboxes, or non input elements that contain
+input elements `$('.input-container').inputVal({ name: 'bar' })`.
+
+##Methods
 
 ###inputVal
-inputVal works similarly to how jQuery's ```val``` method works.
+"inputVal" works similarly to how jQuery's ```val``` method works.
 
-Calling inputVal without a parameter gets the inputs value.
+Calling "inputVal" without a parameter gets the inputs value.
 ```javascript
 var data = $input.inputVal();
 ```
 
-Calling inputVal with a parameter sets the inputs value.
+Calling "inputVal" with a parameter sets the inputs value.
 ```javascript
 $input.inputVal('foo');
 ````
 
-inputVal sets and gets inputs with string, with the exception of checkboxes,
+"inputVal" sets and gets inputs with string, with the exception of checkboxes,
 multiple select's and multiple file inputs.  These elements are set with arrays
+(since they can hold multiple values)
 ```javascript
 // checks checkboxes with values 'a' and 'c', all other checkboxes are unchecked.
 $checkboxGroup.inputVal(['a', 'c']);
 ```
 
-if inputVal is called on an element that is not an input, the selected element's
+If "inputVal" is called on an element that is not an input, the selected element's
 children will be searched for all input elements with name attributes.
 
 ```html
@@ -59,11 +64,11 @@ $('.container').inputVal({
 ```
 
 ###inputOnChange
-detect changes on input attributes.  Binds to "change", "keyup", and "keydown" events
+Detect changes on input attributes.  Binds to "change", "keyup", and "keydown" events
 for text, and text like inputs (textarea, password, etc.) and to the "change" event
-for other inputs.  inputOnChange will only be fired if the value has actually changed
-since the last time the inputOnChange callback was fired.  This allows the extra
-responsiveness of binding to both keyup, and keydown, without firing the inputOnChange
+for other inputs.  "inputOnChange" will only be fired if the value has actually changed
+since the last time the "inputOnChange" callback was fired.  This allows the extra
+responsiveness of binding to both keyup, and keydown, without firing the "inputOnChange"
 callback more often then necessary.
 
 ```javascript
@@ -72,10 +77,12 @@ $input.inputOnChange(function (e) {
 });
 ```
 
-inputOnChange may also be called on a an element containing multiple named html
-input elements.  In this case, the inputOnChange callback will be fired if any
+"inputOnChange" may also be called on a an element containing multiple named html
+input elements.  In this case, the "inputOnChange" callback will be fired if any
 of the inputs change.  The value of "this" will be bound to the html element that
-has changed.
+has changed.  (Note that if a group of checkboxes or radio buttons are called,
+the value of "this" will be the individual input whose value has changed, not the
+group)
 
 ```javascript
 $('.container').inputOnChange(function (e) {
@@ -91,4 +98,11 @@ $input.inputDisable();
 
 // disables all named form inputs in the containing div
 $('.container').inputDisable();
+
+//inputEnable is analogous to inputDisable
+$('.container').inputEnable();
 ```
+
+###inputClear
+
+
