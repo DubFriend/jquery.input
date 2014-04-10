@@ -1,6 +1,6 @@
 // jquery.input version 0.0.0
 // https://github.com/DubFriend/jquery.input
-// (MIT) 08-04-2014
+// (MIT) 09-04-2014
 // Brian Detering <BDeterin@gmail.com> (http://www.briandetering.net/)
 (function ($) {
 'use strict';

@@ -51,7 +51,7 @@ children will be searched for all input elements with name attributes.
 // where the keys are the names of the inputs, and the values are the inputs
 // values.
 $('.container').inputVal();
-//might return
+// in this example will return
 // {
 //     'text-input': 'foo',
 //     'multiple-select-input': ['a', 'b']
