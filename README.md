@@ -107,6 +107,7 @@ $('.container').inputEnable();
 
 ###inputClear
 Clears the input's value.
+May be called on an individual element or a container of input elements
 ```javascript
 $input.inputClear();
 ```
