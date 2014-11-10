@@ -1,6 +1,6 @@
 // jquery.input version 0.0.0
 // https://github.com/DubFriend/jquery.input
-// (MIT) 09-04-2014
+// (MIT) 09-11-2014
 // Brian Detering <BDeterin@gmail.com> (http://www.briandetering.net/)
 (function ($) {
 'use strict';
@@ -849,7 +849,10 @@ var buildFormInputs = function (fig) {
         else if($self.is('textarea')) {
             addInputsBasic('textarea', $self);
         }
-        else if($self.is('input[type="text"]')) {
+        else if(
+            $self.is('input[type="text"]') ||
+            $self.is('input') && !$self.attr('type')
+        ) {
             addInputsBasic('text', $self);
         }
         else if($self.is('input[type="password"]')) {

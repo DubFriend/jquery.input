@@ -1,6 +1,6 @@
 {
   "name": "jquery.input",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A Common interface for html input elements.",
   "main": "jquery.input.js",
   "scripts": {

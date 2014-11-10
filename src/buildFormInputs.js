@@ -65,7 +65,10 @@ var buildFormInputs = function (fig) {
         else if($self.is('textarea')) {
             addInputsBasic('textarea', $self);
         }
-        else if($self.is('input[type="text"]')) {
+        else if(
+            $self.is('input[type="text"]') ||
+            $self.is('input') && !$self.attr('type')
+        ) {
             addInputsBasic('text', $self);
         }
         else if($self.is('input[type="password"]')) {
