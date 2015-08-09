@@ -1,6 +1,6 @@
 // jquery.input version 0.0.1
 // https://github.com/DubFriend/jquery.input
-// (MIT) 09-11-2014
+// (MIT) 09-08-2015
 // Brian Detering <BDeterin@gmail.com> (http://www.briandetering.net/)
 (function ($) {
 'use strict';
@@ -893,7 +893,8 @@ var buildFormInputs = function (fig) {
             addInputsGroup('checkbox', $self);
         }
         else {
-            throw 'invalid input type';
+            //in all other cases default to a "text" input interface.
+            addInputsBasic('text', $self);
         }
     }
     else {

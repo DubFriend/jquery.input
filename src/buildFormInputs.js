@@ -109,7 +109,8 @@ var buildFormInputs = function (fig) {
             addInputsGroup('checkbox', $self);
         }
         else {
-            throw 'invalid input type';
+            // in all other cases default to a "text" input interface.
+            addInputsBasic('text', $self);
         }
     }
     else {
