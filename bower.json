@@ -1,0 +1,23 @@
+{
+  "name": "jquery.input",
+  "main": "jquery.input.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/DubFriend/jquery.input",
+  "description": "\"A Common interface for html input elements.\"",
+  "keywords": [
+    "input",
+    "form",
+    "interface"
+  ],
+  "authors": [
+    "Brian Detering"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
